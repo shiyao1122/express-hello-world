@@ -20,7 +20,7 @@ const test_wehook = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=43a7d8
 
 function reshuiTask() {
 
-	cron.schedule("* 5 * * * *", function() { // 10:00
+	cron.schedule("5 * * * * *", function() { // 10:00
 		console.log("-------Task--------------");
 		post_msg_test()		
 	});
