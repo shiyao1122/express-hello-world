@@ -1,4 +1,6 @@
 const express = require("express");
+const cron = require("node-cron");
+const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -8,6 +10,38 @@ const server = app.listen(port, () => console.log(`Example app listening on port
 
 server.keepAliveTimeout = 120 * 1000;
 server.headersTimeout = 120 * 1000;
+
+const instance = axios.create({
+  //baseURL: 'https://some-domain.com/api/',
+  timeout: 10000
+});
+
+const test_wehook = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=43a7d8cf-1b76-458a-b965-36dc569f18e0'
+
+function reshuiTask() {
+
+	cron.schedule("* 5 * * * *", function() { // 10:00
+		console.log("-------Task--------------");
+		post_msg_test()		
+	});
+}
+
+function post_msg_test(){
+	const webhook = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=43a7d8cf-1b76-458a-b965-36dc569f18e0'
+	let msg = {
+		msgtype: 'markdown',
+		markdown: {
+			content: '<font color="warning">起来喝水！！！！！！！！！！</font>'
+		}
+	}
+	instance.post(webhook, msg).then(res => {
+		console.log(res.data);
+	}).catch(err => {
+		console.log('Error: ', err.message);
+	});
+}
+
+reshuiTask()
 
 const html = `
 <!DOCTYPE html>
